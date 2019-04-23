@@ -191,7 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpMailKitSender.cs" />
-    <Compile Include="ClosedInfo\LoginInformation.cs" />
+    <Compile Include="ClosedInfo\LoginInformation.Development.cs" />
     <Compile Include="DSNSmtpClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
