@@ -17,7 +17,7 @@ namespace SendEmailToSmtp
 				EnableSsl = false,
 				DeliveryMethod = SmtpDeliveryMethod.Network,
 				UseDefaultCredentials = true,//если true, то username и passwd можно оставить пустыми
-				Timeout = 500,
+				Timeout = 1500,
 			};
 			client.Send("from@example.com", "to@example.com", "Hello world", "testbody");
 		}
