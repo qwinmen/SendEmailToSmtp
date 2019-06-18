@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using MailKit;
+using MailKit.Net.Pop3;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
@@ -13,8 +15,32 @@ namespace SendEmailToSmtp
 	//Это скажет SMTP-серверу отправлять вам электронные письма о статусе доставки каждого отправленного вами сообщения.
 	public class DsnSmtpClient : SmtpClient
 	{
-		public DsnSmtpClient()
+		/// <summary>
+		/// Забрать письма с ящика.
+		/// Удалить письма в ящике.
+		/// https://github.com/jstedfast/MailKit/blob/master/Documentation/Examples/Pop3Examples.cs
+		/// </summary>
+		public void DownloadMessages()
 		{
+			using (var client = new Pop3Client(new ProtocolLogger("pop3.log")))
+			{
+				client.Connect("pop3.mailtrap.io", 1100, SecureSocketOptions.StartTls);
+
+				client.Authenticate(LoginInformation.MailtrapLogin.UserName, LoginInformation.MailtrapLogin.Password);
+
+				for (int i = 0; i < client.Count; i++)
+				{
+					var message = client.GetMessage(i);
+
+					// write the message to a file
+					message.WriteTo($"{i}.msg");
+
+					// mark the message for deletion
+					client.DeleteMessage(i);
+				}
+
+				client.Disconnect(true);
+			}
 		}
 
 		/// <summary>
@@ -22,37 +48,51 @@ namespace SendEmailToSmtp
 		/// </summary>
 		public void SendMailToMailtrap()
 		{
-			InternetAddress mailbox = new MailboxAddress("to@example.com");
+			InternetAddress mailbox = new MailboxAddress("test@ya.ru");
 			MimeMessage message = new MimeMessage
 			{
-				From = { InternetAddress.Parse(ParserOptions.Default, "from@example.com") },
-				To = { mailbox },
-				Subject = "Hello world",
+				From = {InternetAddress.Parse(ParserOptions.Default, "no-reply@moscow.ru")},
+				To = {mailbox},
+				Subject = "Тестирование Dsn.",
 				Body = new TextPart
 				{
-					Text = "Olololololo body.",
+					Text = $"Тестирование dsn. Time {DateTime.Now}",
+				},
+				Headers =
+				{
+					{"Return-Receipt-To", "test@ya.ru"},
+					{"Disposition-Notification-To", "test@ya.ru"},
 				},
 			};
-
+			
 			using (var client = new SmtpClient())
 			{
-				client.Connect("smtp.mailtrap.io", 2525, SecureSocketOptions.StartTls);
+				client.Connect(LoginInformation.MailtrapLogin.Host, LoginInformation.MailtrapLogin.Port, LoginInformation.MailtrapLogin.SecureSocketOptions);
+
 				if (client.Capabilities.HasFlag(SmtpCapabilities.Authentication))
-					client.Authenticate(LoginInformation.MailtrapLogin.UserName,
-						LoginInformation.MailtrapLogin.Password);
-				
+					client.Authenticate(LoginInformation.MailtrapLogin.UserName, LoginInformation.MailtrapLogin.Password);
+
+				client.MessageSent +=ClientOnMessageSent;
 				client.Send(message);
 				
 				string envelopeId = GetEnvelopeId(message);
 				Console.WriteLine("Получить идентификатор конверта, который будет использоваться с DSN: {0}", envelopeId);
+				
+				DeliveryStatusNotification? dsnStatus = GetDeliveryStatusNotifications(message, new MailboxAddress("test@ya.ru"));
+				Console.WriteLine("Типы уведомлений о состоянии доставки, требуемые для указанного почтового ящика получателя: {0}", dsnStatus);
 
-				DeliveryStatusNotification? dsnStatus = GetDeliveryStatusNotifications(message, new MailboxAddress("bala@bolka.ya"));
-				Console.WriteLine("Получите типы уведомлений о состоянии доставки, требуемые для указанного почтового ящика получателя: {0}", dsnStatus);
-
-				ProcessDeliveryStatusNotification(message);
+				Thread.Sleep(10000);
+				client.NoOp();
+				
 				client.Disconnect(true);
 			}
 		}
+
+		private void ClientOnMessageSent(object sender, MessageSentEventArgs e)
+		{
+			Console.WriteLine("Сообщение отослано.");
+		}
+
 
 		public void ProcessDeliveryStatusNotification(MimeMessage message)
 		{
@@ -61,11 +101,12 @@ namespace SendEmailToSmtp
 			if (report == null || report.ReportType == null || !report.ReportType.Equals("delivery-status", StringComparison.OrdinalIgnoreCase))
 			{
 				// это не уведомление о статусе доставки ...
+				Console.WriteLine("Отсутствует уведомление о статусе доставки.");
 				return;
 			}
 
 			// process the report
-			foreach (var mds in report.OfType<MessageDeliveryStatus>())
+			foreach (MessageDeliveryStatus mds in report.OfType<MessageDeliveryStatus>())
 			{
 				// process the status groups - each status group represents a different recipient
 
@@ -147,7 +188,7 @@ namespace SendEmailToSmtp
 			// В этом примере мы хотим получать уведомления только о сбоях доставки в почтовый ящик.
 			// Если вы также хотите получать уведомления о задержках или успешных поставках,
 			// просто поразрядно - или любую комбинацию флагов, о которой вы хотите получать уведомления.
-			return DeliveryStatusNotification.Failure;
+			return DeliveryStatusNotification.Failure | DeliveryStatusNotification.Delay | DeliveryStatusNotification.Success;
 		}
 	}
 }

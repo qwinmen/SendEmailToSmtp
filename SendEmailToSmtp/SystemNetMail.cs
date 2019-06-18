@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using System.Text;
 using SendEmailToSmtp.ClosedInfo;
 
 namespace SendEmailToSmtp
@@ -43,12 +44,29 @@ namespace SendEmailToSmtp
 		/// </summary>
 		public static void SendMailToMailtrap()
 		{
-			var client = new SmtpClient("smtp.mailtrap.io", 2525)
+			MailMessage mailMessage = new MailMessage
+			{
+				From = new MailAddress("no-reply@moscow.ru"),
+				To = {new MailAddress("test@yandex.ru")},
+				Subject = "Hello wold",
+				Body = "Проверка dsn",
+				DeliveryNotificationOptions = DeliveryNotificationOptions.OnSuccess,
+				BodyEncoding = Encoding.UTF8,
+				SubjectEncoding = Encoding.UTF8,
+				Headers =
+				{
+					{"Return-Receipt-To", "test@yandex.ru"},
+					{"Disposition-Notification-To", "test@yandex.ru"},
+				},
+			};
+
+			var client = new SmtpClient(LoginInformation.MailtrapLogin.Host, LoginInformation.MailtrapLogin.Port)
 			{
 				Credentials = new NetworkCredential(LoginInformation.MailtrapLogin.UserName, LoginInformation.MailtrapLogin.Password),
-				EnableSsl = true
+				EnableSsl = true,
 			};
-			client.Send("from@example.com", "to@example.com", "Hello world", "testbody");
+			
+			client.Send(mailMessage);
 		}
 	}
 }
