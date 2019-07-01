@@ -14,10 +14,7 @@ namespace SendEmailToSmtp
 //			new LimilabsSmtp().RequestDeliveryNotification();
 
 			//Запросить параметры smtp сервера:
-			{
-//				AbpMailKitSender.PrintCapabilities();
-//				AbpMailKitSender.PopPrintCapabilities();
-			}
+//			RunTestMailServer();
 
 //			new DsnSmtpClient().SendMailToMailtrap();
 //			new DsnSmtpClient().DownloadMessages();
@@ -34,6 +31,18 @@ namespace SendEmailToSmtp
 
 			Console.WriteLine("Sent");
 			Console.ReadLine();
+		}
+
+		/// <summary>
+		/// Узнать возможности почтового сервера.
+		/// </summary>
+		private static void RunTestMailServer()
+		{
+			Console.WriteLine("Smtp:");
+			AbpMailKitSender.PrintCapabilities();
+
+			Console.WriteLine("Pop3:");
+			AbpMailKitSender.PopPrintCapabilities();
 		}
 	}
 }
