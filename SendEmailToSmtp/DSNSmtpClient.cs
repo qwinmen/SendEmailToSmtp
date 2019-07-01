@@ -15,6 +15,13 @@ namespace SendEmailToSmtp
 	//Это скажет SMTP-серверу отправлять вам электронные письма о статусе доставки каждого отправленного вами сообщения.
 	public class DsnSmtpClient : SmtpClient
 	{
+		private readonly ILoginInformation _loginInfo;
+
+		public DsnSmtpClient()
+		{
+			_loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.Mailtrap);
+		}
+
 		/// <summary>
 		/// Забрать письма с ящика.
 		/// Удалить письма в ящике.
@@ -24,9 +31,9 @@ namespace SendEmailToSmtp
 		{
 			using (var client = new Pop3Client(new ProtocolLogger("pop3.log")))
 			{
-				client.Connect("pop3.mailtrap.io", 1100, SecureSocketOptions.StartTls);
+				client.Connect("pop3.mailtrap.io", _loginInfo.Pop3Port, _loginInfo.SecureSocketOptions);
 
-				client.Authenticate(LoginInformation.MailtrapLogin.UserName, LoginInformation.MailtrapLogin.Password);
+				client.Authenticate(_loginInfo.UserName, _loginInfo.Password);
 
 				for (int i = 0; i < client.Count; i++)
 				{
@@ -67,10 +74,10 @@ namespace SendEmailToSmtp
 			
 			using (var client = new SmtpClient())
 			{
-				client.Connect(LoginInformation.MailtrapLogin.Host, LoginInformation.MailtrapLogin.Port, LoginInformation.MailtrapLogin.SecureSocketOptions);
+				client.Connect(_loginInfo.Host, _loginInfo.SmtpPort, _loginInfo.SecureSocketOptions);
 
 				if (client.Capabilities.HasFlag(SmtpCapabilities.Authentication))
-					client.Authenticate(LoginInformation.MailtrapLogin.UserName, LoginInformation.MailtrapLogin.Password);
+					client.Authenticate(_loginInfo.UserName, _loginInfo.Password);
 
 				client.MessageSent +=ClientOnMessageSent;
 				client.Send(message);

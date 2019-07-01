@@ -60,9 +60,6 @@
     <Reference Include="MailKit, Version=2.1.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
       <HintPath>..\packages\MailKit.2.1.2\lib\net45\MailKit.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Caching.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Memory, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Caching.Memory.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Memory.dll</HintPath>
     </Reference>
@@ -194,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpMailKitSender.cs" />
+    <Compile Include="ClosedInfo\ILoginInformation.cs" />
     <Compile Include="ClosedInfo\LoginInformation.Development.cs" />
     <Compile Include="DSNSmtpClient.cs" />
     <Compile Include="LimilabsSmtp.cs" />

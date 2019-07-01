@@ -7,6 +7,13 @@ namespace SendEmailToSmtp
 {
 	public class SystemNetMail
 	{
+		public static ILoginInformation LoginInfo { get; set; }
+
+		public SystemNetMail()
+		{
+			LoginInfo = new LoginInformation.MailtrapLogin();
+		}
+
 		/// <summary>
 		/// Смотри тут https://mailhog.isap.team/
 		/// </summary>
@@ -60,9 +67,9 @@ namespace SendEmailToSmtp
 				},
 			};
 
-			var client = new SmtpClient(LoginInformation.MailtrapLogin.Host, LoginInformation.MailtrapLogin.Port)
+			var client = new SmtpClient(LoginInfo.Host, LoginInfo.SmtpPort)
 			{
-				Credentials = new NetworkCredential(LoginInformation.MailtrapLogin.UserName, LoginInformation.MailtrapLogin.Password),
+				Credentials = new NetworkCredential(LoginInfo.UserName, LoginInfo.Password),
 				EnableSsl = true,
 			};
 			

@@ -9,13 +9,20 @@ namespace SendEmailToSmtp
 	//https://www.limilabs.com/
 	public class LimilabsSmtp
 	{
+		private readonly ILoginInformation _loginInfo;
+
+		public LimilabsSmtp()
+		{
+			_loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.Mailtrap);
+		}
+
 		//https://www.limilabs.com/blog/requesting-delivery-status-notifications-dsn
 		public void RequestDeliveryNotification()
 		{
 			using (Smtp smtp = new Smtp())
 			{
-				smtp.Connect(LoginInformation.MailtrapLogin.Host, LoginInformation.MailtrapLogin.Port, false);
-				smtp.UseBestLogin(LoginInformation.MailtrapLogin.UserName, LoginInformation.MailtrapLogin.Password);
+				smtp.Connect(_loginInfo.Host, _loginInfo.SmtpPort, false);
+				smtp.UseBestLogin(_loginInfo.UserName, _loginInfo.Password);
 				smtp.Configuration.DeliveryNotification =
 					DeliveryNotificationOptions.OnFailure | DeliveryNotificationOptions.Delay | DeliveryNotificationOptions.OnSuccess;
 

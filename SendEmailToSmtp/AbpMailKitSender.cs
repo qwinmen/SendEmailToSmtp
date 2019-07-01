@@ -1,7 +1,6 @@
 ﻿using System;
 using MailKit.Net.Pop3;
 using MailKit.Net.Smtp;
-using MailKit.Security;
 using SendEmailToSmtp.ClosedInfo;
 
 namespace SendEmailToSmtp
@@ -12,15 +11,17 @@ namespace SendEmailToSmtp
 
 		public static void PopPrintCapabilities()
 		{
+			var loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.Mailtrap);
+
 			using (var client = new Pop3Client ()) {
-				client.Connect("pop3.mailtrap.io", 1100, SecureSocketOptions.StartTls);
+				client.Connect("pop3.mailtrap.io", loginInfo.Pop3Port, loginInfo.SecureSocketOptions);
 
 				if (client.Capabilities.HasFlag (Pop3Capabilities.Sasl)) {
 					var mechanisms = string.Join (", ", client.AuthenticationMechanisms);
 					Console.WriteLine ("The POP3 server supports the following SASL mechanisms: {0}", mechanisms);
 				}
 
-				client.Authenticate(LoginInformation.MailtrapLogin.UserName, LoginInformation.MailtrapLogin.Password);
+				client.Authenticate(loginInfo.UserName, loginInfo.Password);
 
 				if (client.Capabilities.HasFlag (Pop3Capabilities.Apop))
 					Console.WriteLine ("The server supports APOP authentication.");
@@ -55,15 +56,17 @@ namespace SendEmailToSmtp
 		/// </summary>
 		public static void PrintCapabilities()
 		{
+			var loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.Mailtrap);
+
 			using (var client = new SmtpClient())
 			{
-				client.Connect("smtp.mailtrap.io", 2525, SecureSocketOptions.StartTls);
+				client.Connect(loginInfo.Host, loginInfo.SmtpPort, loginInfo.SecureSocketOptions);
 
 				if (client.Capabilities.HasFlag(SmtpCapabilities.Authentication))
 				{
 					var mechanisms = string.Join(", ", client.AuthenticationMechanisms);
 					Console.WriteLine("The SMTP server supports the following SASL mechanisms: {0}", mechanisms);
-					client.Authenticate(LoginInformation.MailtrapLogin.UserName, LoginInformation.MailtrapLogin.Password);
+					client.Authenticate(loginInfo.UserName, loginInfo.Password);
 				}
 
 				if (client.Capabilities.HasFlag(SmtpCapabilities.Size))
