@@ -192,6 +192,7 @@
   <ItemGroup>
     <Compile Include="AbpMailKitSender.cs" />
     <Compile Include="ClosedInfo\ILoginInformation.cs" />
+    <Compile Include="ClosedInfo\LoginInformation.cs" />
     <Compile Include="ClosedInfo\LoginInformation.Development.cs" />
     <Compile Include="DSNSmtpClient.cs" />
     <Compile Include="LimilabsSmtp.cs" />
