@@ -2,6 +2,9 @@
 
 namespace SendEmailToSmtp.ClosedInfo
 {
+	/// <summary>
+	/// Базовые поля любой аутентификации на сервере
+	/// </summary>
 	public interface ILoginInformation
 	{
 		string UserName { get; set; }
