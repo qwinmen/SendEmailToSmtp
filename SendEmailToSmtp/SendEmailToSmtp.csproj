@@ -195,9 +195,11 @@
     <Compile Include="ClosedInfo\LoginInformation.cs" />
     <Compile Include="ClosedInfo\LoginInformation.Development.cs" />
     <Compile Include="DSNSmtpClient.cs" />
+    <Compile Include="Helpers\MessageDeliveryStatusHelper.cs" />
     <Compile Include="LimilabsSmtp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StageDsnPrototype.Development.cs" />
     <Compile Include="SystemNetMail.cs" />
   </ItemGroup>
   <ItemGroup>
