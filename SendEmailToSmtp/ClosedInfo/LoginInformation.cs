@@ -30,6 +30,7 @@ namespace SendEmailToSmtp.ClosedInfo
 				SmtpPort = 25;
 				Pop3Port = 110;
 				SecureSocketOptions = SecureSocketOptions.StartTls;
+				To = "test@to.com";
 			}
 
 			public string UserName { get; set; }
@@ -39,6 +40,7 @@ namespace SendEmailToSmtp.ClosedInfo
 			public int Pop3Port { get; set; }
 			public int ImapPort { get; set; }
 			public SecureSocketOptions SecureSocketOptions { get; set; }
+			public string To { get; set; }
 		}
 	}
 }
