@@ -17,13 +17,13 @@ namespace SendEmailToSmtp
 		public DsnSmtpClient(string logFileName)
 			: base(new ProtocolLogger(logFileName))
 		{
-			_loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.Mailtrap);
+			_loginInfo = new LoginInformation.ExampleMailLogin();
 		}
 
 		public DsnSmtpClient()
 			: base()
 		{
-			_loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.Mailtrap);
+			_loginInfo = new LoginInformation.ExampleMailLogin();
 		}
 
 		/// <summary>

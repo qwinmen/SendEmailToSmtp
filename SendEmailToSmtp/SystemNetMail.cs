@@ -11,7 +11,7 @@ namespace SendEmailToSmtp
 
 		public SystemNetMail()
 		{
-			LoginInfo = new LoginInformation.MailtrapLogin();
+			LoginInfo = new LoginInformation.ExampleMailLogin();
 		}
 
 		/// <summary>

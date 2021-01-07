@@ -1,22 +1,10 @@
-﻿using System;
-using MailKit.Security;
+﻿using MailKit.Security;
 
 namespace SendEmailToSmtp.ClosedInfo
 {
 	//Открытая часть с примером реализации обьекта аутентификаций
 	public partial class LoginInformation
 	{
-		public ILoginInformation GetExampleLoginInformation(SiteLoginInfo siteLoginInfo)
-		{
-			switch (siteLoginInfo)
-			{
-				case SiteLoginInfo.ExampleMailLogin:
-					return new ExampleMailLogin();
-				default:
-					throw new ArgumentOutOfRangeException(nameof(siteLoginInfo), siteLoginInfo, null);
-			}
-		}
-
 		/// <summary>
 		///     Пример инициализаций
 		/// </summary>

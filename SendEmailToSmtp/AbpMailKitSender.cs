@@ -18,7 +18,7 @@ namespace SendEmailToSmtp
 
 		public static void PopPrintCapabilities()
 		{
-			var loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.StageMoscow);
+			var loginInfo = new LoginInformation.ExampleMailLogin();
 
 			using (var client = new Pop3Client ()) {
 				client.Connect(/*"pop3.mailtrap.io"*/loginInfo.Host, loginInfo.Pop3Port, loginInfo.SecureSocketOptions);
@@ -63,7 +63,7 @@ namespace SendEmailToSmtp
 		/// </summary>
 		public static void PrintCapabilities()
 		{
-			var loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.StageMoscow);
+			var loginInfo = new LoginInformation.ExampleMailLogin();
 
 			using (var client = new SmtpClient())
 			{
@@ -100,7 +100,7 @@ namespace SendEmailToSmtp
 		/// </summary>
 		public static void SendMailToStageMoscow()
 		{
-			var loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.StageMoscow);
+			var loginInfo = new LoginInformation.ExampleMailLogin();
 			string fakeEmail = String.Format("63b978b8b8-ba6217@{1}", "inbox.mailtrap.io", "yandex.ru");
 
 			var message = new MimeMessage();
@@ -158,7 +158,7 @@ namespace SendEmailToSmtp
 		/// </summary>
 		public static void ImapDeleteMailFromStageMoscow()
 		{
-			var loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.StageMoscow);
+			var loginInfo = new LoginInformation.ExampleMailLogin();
 			using (var client = new ImapClient(new ProtocolLogger("smtpdelete.log")))
 			{
 				// For demo-purposes, accept all SSL certificates
@@ -182,7 +182,7 @@ namespace SendEmailToSmtp
 		/// </summary>
 		public static void ImapGetMailFromStageMoscow()
 		{
-			var loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.StageMoscow);
+			var loginInfo = new LoginInformation.ExampleMailLogin();
 
 			using (var client = new ImapClient(new ProtocolLogger("smtpget.log")))
 			{
@@ -247,7 +247,7 @@ namespace SendEmailToSmtp
 		/// </summary>
 		public static void Pop3GetMailFromStageMoscow()
 		{
-			var loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.StageMoscow);
+			var loginInfo = new LoginInformation.ExampleMailLogin();
 
 			using (var client = new Pop3Client(new ProtocolLogger("pop3get.log")))
 			{

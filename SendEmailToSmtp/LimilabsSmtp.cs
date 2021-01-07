@@ -13,7 +13,7 @@ namespace SendEmailToSmtp
 
 		public LimilabsSmtp()
 		{
-			_loginInfo = new LoginInformation().GetLoginInformation(SiteLoginInfo.Mailtrap);
+			_loginInfo = new LoginInformation.ExampleMailLogin();
 		}
 
 		//https://www.limilabs.com/blog/requesting-delivery-status-notifications-dsn
