@@ -7,9 +7,11 @@ namespace SendEmailToSmtp.ClosedInfo
 	/// </summary>
 	public interface ILoginInformation: IMailSender
 	{
-		string UserName { get; set; }
-		string Password { get; set; }
+		LoginType LoginType { get; }
+		string UserName { get; }
+		string Password { get; }
 		string Host { get; set; }
+		string Domain { get; set; }
 		int SmtpPort { get; set; }
 		int Pop3Port { get; set; }
 		int ImapPort { get; set; }

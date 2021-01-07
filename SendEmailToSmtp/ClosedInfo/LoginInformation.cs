@@ -10,25 +10,17 @@ namespace SendEmailToSmtp.ClosedInfo
 		/// </summary>
 		public class ExampleMailLogin : ILoginInformation
 		{
-			public ExampleMailLogin()
-			{
-				UserName = "1111111";
-				Password = "2222222";
-				Host = "smtp.example.com";
-				SmtpPort = 25;
-				Pop3Port = 110;
-				SecureSocketOptions = SecureSocketOptions.StartTls;
-				To = "test@to.com";
-			}
-
-			public string UserName { get; set; }
-			public string Password { get; set; }
-			public string Host { get; set; }
-			public int SmtpPort { get; set; }
-			public int Pop3Port { get; set; }
+			public LoginType LoginType => LoginType.ExampleMailLogin;
+			public string UserName => "1111111";
+			public string Password => "2222222";
+			public string Host { get; set; } = "smtp.example.com";
+			public string Domain { get; set; } = "example.com";
+			public int SmtpPort { get; set; } = 25;
+			public int Pop3Port { get; set; } = 110;
 			public int ImapPort { get; set; }
-			public SecureSocketOptions SecureSocketOptions { get; set; }
-			public string To { get; set; }
+			public int Port { get; set; }
+			public SecureSocketOptions SecureSocketOptions { get; set; } = SecureSocketOptions.StartTls;
+			public string To { get; set; } = "test@to.com";
 		}
 	}
 }

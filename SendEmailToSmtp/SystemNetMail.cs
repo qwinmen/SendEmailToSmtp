@@ -31,6 +31,23 @@ namespace SendEmailToSmtp
 		}
 
 		/// <summary>
+		/// Отправка на реальный ящик
+		/// </summary>
+		public static void SendMailToIsapOnline()
+		{
+			var source = LoginInformation.GetLoginInformation(LoginType.IsapOnlineLogin);
+			var client = new SmtpClient(source.Host, source.SmtpPort)
+				{
+					Credentials = new NetworkCredential(source.UserName, source.Password, source.Domain),
+					EnableSsl = true,
+					DeliveryMethod = SmtpDeliveryMethod.Network,
+					UseDefaultCredentials = false,//если true, то username и passwd можно оставить пустыми
+					Timeout = 1500,
+				};
+			client.Send("from@example.com", "мойпочтовыйадрессобака", "Hello world", "testbody");
+		}
+
+		/// <summary>
 		/// Смотри тут http://localhost:8025/#
 		/// </summary>
 		public static void SendMailToRspkMailhogLocalHost()
